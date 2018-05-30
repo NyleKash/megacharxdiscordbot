@@ -1,0 +1,2 @@
+# megacharxdiscordbot
+discord bot
