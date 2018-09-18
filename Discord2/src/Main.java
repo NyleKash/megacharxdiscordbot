@@ -4,40 +4,35 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.PrivateChannel;
-import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
-import net.dv8tion.jda.core.managers.GuildController;
-import net.dv8tion.jda.core.requests.restaction.GuildAction;
 
 public class Main {
 	
 	public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException, Exception {
 
 		JDA api = new JDABuilder(AccountType.BOT)
-				.setToken(Values.get("constants.txt", 2))
-				.setGame(Game.playing("Charizardite X"))
+				.setToken(Values.get("constants", 2))
 				.buildBlocking();
 		api.addEventListener(new CommandListener());
 		api.addEventListener(new DMListener());
-		// generic listener is pretty useless api.addEventListener(new GenericListener());
+//		api.addEventListener(new PkmnListener());
 		
-		// open dm with everyone
+		// open dm with everyone      happens in pkmnlistener too
+		// also makes the pokemonfile for everyone
 		List<User> users = api.getUsers();
+		Values.makeDir("pokemon");
 		for(int i = 0; users.size() > i; i++) {
-			if (!users.get(i).equals(api.getSelfUser()))
-				users.get(i).openPrivateChannel().queue();
+			User user = users.get(i);
+			if (!user.isBot()) {
+				user.openPrivateChannel().queue();
+					Values.makeFile("pokemon/" + user.getId());
+					Values.write("pokemon/" + user.getId(), 1, user.getName());
+			}
 		}
-		
 		while(true) {
+			api.getPresence().setGame(Game.playing(Values.get("games", (int)(Math.random() * Values.getLen("games") + 1))));
 			Thread.sleep(60000);
-			api.getPresence().setGame(Game.playing("Charizardite Y???"));
-			Thread.sleep(60000);
-			api.getPresence().setGame(Game.playing("Charizardite X"));
 		}
 				
 	}

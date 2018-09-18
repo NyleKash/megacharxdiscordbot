@@ -12,23 +12,14 @@ public class DMListener extends ListenerAdapter
     @Override	
     public void onPrivateMessageReceived(PrivateMessageReceivedEvent event)
     {
-    	String ownerID = "";
-    	String DMID = "";
-    	try {
-			ownerID = Values.get("constants.txt", 4);
-		} catch (Exception e) {e.printStackTrace();}
-    	try {
-			DMID = Values.get("constants.txt", 6);
-		} catch (Exception e) {e.printStackTrace();}
+		String ownerID = Values.get("constants", 4);
+		String DMID = Values.get("constants", 6);
     	
-    	
-    	// if (event.getAuthor().isBot()) return;
     	if (event.getAuthor().equals(event.getJDA().getSelfUser()) || event.getAuthor().getId().equals(ownerID)) return;
-        // We don't want to respond to other bot accounts, including ourself
-        Message message = event.getMessage();
-        String content = message.getRawContent(); 
-        // getRawContent() is an atomic getter
-        // getContent() is a lazyk getter which modifies the content for e.g. console view (strip discord formatting)
+        
+    	Message message = event.getMessage();
+        String content = message.getContentRaw();
+        
         MessageChannel channel = event.getJDA().getPrivateChannelById(DMID);
         channel.sendMessage(event.getAuthor().getAsMention() + ": " + content).queue();
         
