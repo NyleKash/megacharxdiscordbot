@@ -11,6 +11,9 @@ public class Main {
 	
 	public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException, Exception {
 
+		JarGUI GUI = new JarGUI();
+		GUI.setup();
+		
 		JDA api = new JDABuilder(AccountType.BOT)
 				.setToken(Values.get("constants", 2))
 				.buildBlocking();

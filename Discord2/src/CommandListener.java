@@ -244,6 +244,13 @@ public class CommandListener extends ListenerAdapter
 			        channel.sendMessage(out).queue();
 				}	
 				
+				else if (content.startsWith("faint")) {
+					String out = "The opposing command used stone edge! It was super effecticce! Critical hit! Mega Charizard X has fainted! You rush it to the nearest Pokémon Center...";
+					MessageChannel channel = event.getChannel();
+			        channel.sendMessage(out).queue();
+					System.exit(0);
+				}
+				
 				else if (content.startsWith("say")) {
 					try {
 						content = content.substring(4);
